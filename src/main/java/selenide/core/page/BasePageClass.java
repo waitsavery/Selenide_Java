@@ -9,8 +9,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.Select;
 
-import selenide.core.Constants;
 import selenide.core.test.BaseTestClass;
+import selenide.utils.Constants;
 
 public class BasePageClass extends Element{
 

@@ -25,7 +25,7 @@ public class WebDriverSetup {
 	// * DRIVER BUILD AREA *
 	// *********************
 	public WebDriverSetup() {
-		setBrowserType("firefox");
+		setBrowserType("chrome");
 		setBrowserVersion("");
 		setOperatingSystem("windows");
 		setEnvironment("stage");
@@ -156,6 +156,8 @@ public class WebDriverSetup {
 	 *            driver itself
 	 */
 	public void closeAllBrowsersAndQuitDriver(WebDriver driver) {
+		//Command line executino string to kill all chromedrivers; default is set for Windows
+		String killChromeDrivers = "taskkill /im chromedriver.exe /f";
 		// Grab all window handles for the driver
 		Set<String> windowHandles = driver.getWindowHandles();
 		// Iterate through each handle and close them
@@ -166,13 +168,16 @@ public class WebDriverSetup {
 		// Quit the driver
 		driver.quit();
 
-		// If testing on windows with chrome, ensure no chrome or chromedriver
-		// processes remian before ending the test
+		if(isMac()){
+			killChromeDrivers = "killall chromedriver";
+		}
+		
+		// If testing chrome, ensure no chromedriver
+		// processes remains before ending the test
 		if (getBrowserType().equalsIgnoreCase("chrome")) {
 			if (getOperatingSystem().equalsIgnoreCase("windows")) {
 				try {
-					Runtime.getRuntime().exec("taskkill /im chromedriver.exe /f");
-					Runtime.getRuntime().exec("taskkill /im chrome.exe /f");
+					Runtime.getRuntime().exec(killChromeDrivers);
 				} catch (IOException ioe) {
 					System.out.println("ERROR: Unable to close chrome drivers and browsers.");
 				}
@@ -183,23 +188,35 @@ public class WebDriverSetup {
 	/**
 	 * @summary generates a WebDriver based on the browser type under test
 	 */
-	private void generateDriver() {
+	private void generateDriver() { 
+		String os = System.getProperty("os.name");
+	    String dir = System.getProperty("user.dir");
+	    String pathDelimiter = "\\";
+	    String chromeDriver = "chromedriver.exe";
+	    if(os.toLowerCase().contains("mac")){
+			pathDelimiter = "/";
+			chromeDriver = "chromedriver";
+	    }
 		switch (getBrowserType().toLowerCase()) {
 		case "firefox":
 			setDriver(new FirefoxDriver());
 			break;
 		case "iexplore":
 			System.setProperty("webdriver.ie.driver",
-					"C:\\Users\\temp\\workspace\\Selenium_Java\\src\\main\\java\\selenium\\core\\drivers\\IEDriverServer.exe");
+					dir + pathDelimiter + "src"+pathDelimiter+"main"+pathDelimiter+"java"+pathDelimiter+"selenide"+pathDelimiter+"drivers"+pathDelimiter+"IEDriverServer.exe");
 			setDriver(new InternetExplorerDriver());
 			break;
 		case "chrome":
 			System.setProperty("webdriver.chrome.driver",
-					"C:\\Users\\temp\\workspace\\Selenium_Java\\src\\main\\java\\selenium\\core\\drivers\\chromedriver.exe");
+					dir + pathDelimiter + "src"+pathDelimiter+"main"+pathDelimiter+"java"+pathDelimiter+"selenide"+pathDelimiter+"drivers"+pathDelimiter+chromeDriver);
 			setDriver(new ChromeDriver());
 			break;
 		default:
 			break;
 		}
+	}
+	
+	private boolean isMac(){
+		return System.getProperty("os.name").toLowerCase().contains("mac");
 	}
 }

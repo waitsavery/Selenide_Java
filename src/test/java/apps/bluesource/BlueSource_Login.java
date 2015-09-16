@@ -2,8 +2,8 @@ package apps.bluesource;
 
 import org.testng.annotations.Test;
 
-import selenide.apps.bluesource.employeesPage.EmployeesPage;
-import selenide.apps.bluesource.loginPage.LoginPage;
+import selenide.apps.bluesource.pages.employeesPage.EmployeesPage;
+import selenide.apps.bluesource.pages.loginPage.LoginPage;
 
 public class BlueSource_Login extends selenide.core.test.BaseTestClass {
 	public BlueSource_Login() {

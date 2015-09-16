@@ -5,7 +5,7 @@ import java.util.concurrent.TimeUnit;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 
-import selenide.core.Constants;
+import selenide.utils.Constants;
 
 public class BaseTestClass extends WebDriverSetup {
 	// **************************
